@@ -70,52 +70,79 @@ class _PickDetailScreenState extends State<PickDetailScreen> {
             summary = data['Plot'] as String? ?? 'No plot available.';
           }
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                if (imageUrl != null)
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12.0),
-                    child: Image.network(
-                      imageUrl,
-                      height: 260,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, _, _) => const Icon(Icons.broken_image, size: 100),
-                    ),
-                  )
-                else
-                  Icon(isBook ? Icons.book : Icons.movie, size: 120),
-                const SizedBox(height: 16),
-                Text(
-                  widget.pick.title,
-                  style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  '${isBook ? "Book" : "Movie"} · ${widget.pick.externalId}',
-                  style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.secondary),
-                ),
-                const SizedBox(height: 16),
-                Card(
-                  color: theme.colorScheme.surfaceContainerHighest,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Why I recommend it', style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 4),
-                        Text('"${widget.pick.note}"', style: theme.textTheme.bodyMedium),
-                      ],
-                    ),
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight - 32.0,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Center(
+                        child: imageUrl != null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(12.0),
+                                child: Image.network(
+                                  imageUrl,
+                                  height: 260,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, _, _) =>
+                                      const Icon(Icons.broken_image, size: 100),
+                                ),
+                              )
+                            : Icon(isBook ? Icons.book : Icons.movie, size: 120),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        widget.pick.title,
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        '${isBook ? "Book" : "Movie"} · ${widget.pick.externalId}',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.secondary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+                      Card(
+                        color: theme.colorScheme.surfaceContainerHighest,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Why I recommend it',
+                                style: theme.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '"${widget.pick.note}"',
+                                style: theme.textTheme.bodyMedium,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        summary,
+                        style: theme.textTheme.bodyMedium,
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 16),
-                Text(summary, style: theme.textTheme.bodyMedium),
-              ],
-            ),
+              );
+            },
           );
         },
       ),
